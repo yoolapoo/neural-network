@@ -6,9 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
+
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -31,10 +30,13 @@ public class Main extends Application {
         training = new Button("Training");
         accuraccy = new Button("Accuraccy");
         test = new Button("Test");
+        training.setPrefSize(200,100);
+        accuraccy.setPrefSize(200,100);
+        test.setPrefSize(200,100);
 
-        buttonPanel.setMargin(training,new Insets(60,20,20,250));
-        buttonPanel.setMargin(accuraccy,new Insets(60,20,20,250));
-        buttonPanel.setMargin(test,new Insets(60,20,20,250));
+        buttonPanel.setMargin(training,new Insets(60,20,20,300));
+        buttonPanel.setMargin(accuraccy,new Insets(60,20,20,300));
+        buttonPanel.setMargin(test,new Insets(60,20,20,300));
 
 
         ObservableList list = buttonPanel.getChildren();
@@ -43,7 +45,7 @@ public class Main extends Application {
 
 
         training.setOnAction(e ->{
-            Training training = new Training();
+            Training training = new Training(primaryStage);
             primaryStage.getScene().setRoot(training.getRootPane());
         });
 
@@ -52,9 +54,15 @@ public class Main extends Application {
             primaryStage.getScene().setRoot(accuraccy.getRootPane());
         });
 
-        Scene scene = new Scene(buttonPanel,600,400);
+        test.setOnAction(e ->{
+            Test test = new Test(primaryStage);
+            primaryStage.getScene().setRoot(test.getRootPane());
+        });
+
+        Scene scene = new Scene(buttonPanel,800,600);
         primaryStage.setScene(scene);
         primaryStage.show();
 
     }
+
 }

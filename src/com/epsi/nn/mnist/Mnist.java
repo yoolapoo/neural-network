@@ -8,6 +8,7 @@ import com.epsi.nn.trainSet.TrainSet;
 
 import java.io.File;
 
+
 /**
  * Created by Luecx on 10.08.2017.
  */
@@ -37,8 +38,8 @@ public class Mnist {
 
             String path = new File("").getAbsolutePath();
 
-            MnistImageFile m = new MnistImageFile(path + "/res/train-images.idx3-ubyte", "rw");
-            MnistLabelFile l = new MnistLabelFile(path + "/res/train-labels.idx1-ubyte", "rw");
+            MnistImageFile m = new MnistImageFile(path + "/train/train-images.idx3-ubyte", "rw");
+            MnistLabelFile l = new MnistLabelFile(path + "/train/train-labels.idx1-ubyte", "rw");
 
             for(int i = start; i <= end; i++) {
                 if(i % 100 ==  0){
@@ -64,10 +65,10 @@ public class Mnist {
          return set;
     }
 
-    public static void trainData(Network net,TrainSet set, int epochs, int loops, int batch_size, String output_file) {
+    public static void trainData(Network net, TrainSet set, int epochs, int loops, int batch_size, String output_file) {
         for(int e = 0; e < epochs;e++) {
             net.train(set, loops, batch_size);
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>   "+ e+ "   <<<<<<<<<<<<<<<<<<<<<<<<<<");
+            System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>  EPOCH N°= "+ e+ "   <<<<<<<<<<<<<<<<<<<<<<<<<<");
             try {
                 net.saveNetwork(output_file);
             } catch (Exception e1) {
@@ -76,7 +77,7 @@ public class Mnist {
         }
     }
 
-    public static void testTrainSet(Network net, TrainSet set, int printSteps) {
+    public static String testTrainSet(Network net, TrainSet set, int printSteps) {
         int correct = 0;
         for(int i = 0; i < set.size(); i++) {
 
@@ -90,6 +91,7 @@ public class Mnist {
                 System.out.println(i + ": " + (double)correct / (double) (i + 1));
             }
         }
-        System.out.println("Testing finished, RESULT: " + correct + " / " + set.size()+ "  -> " + (double)correct / (double)set.size() +" %");
+        String res = "Testing finished, RESULT: " + correct + " / " + set.size()+ "  -> " + Math.round(( (double)correct / (double)set.size()) *100) +" %";
+        return res;
     }
 }
