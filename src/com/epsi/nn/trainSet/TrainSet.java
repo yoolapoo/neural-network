@@ -13,7 +13,7 @@ public class TrainSet {
     public final int OUTPUT_SIZE;
 
     //double[][] <- index1: 0 = input, 1 = output || index2: index of element
-    private ArrayList<double[][]> data = new ArrayList<>();
+    private List<double[][]> data = new ArrayList<>();
 
     public TrainSet(int INPUT_SIZE, int OUTPUT_SIZE) {
         this.INPUT_SIZE = INPUT_SIZE;

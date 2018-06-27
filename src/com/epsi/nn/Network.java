@@ -148,19 +148,6 @@ public class Network {
             e.printStackTrace();
         }
 
-            /*TrainSet set = new TrainSet(4,2);
-            set.addData(new double[]{0.1,0.2,0.3,0.4}, new double[]{0.9,0.1});
-            set.addData(new double[]{0.9,0.8,0.7,0.6}, new double[]{0.1,0.9});
-            set.addData(new double[]{0.3,0.8,0.1,0.4}, new double[]{0.3,0.7});
-            set.addData(new double[]{0.9,0.8,0.1,0.2}, new double[]{0.7,0.3});
-
-            network.train(set,10000,4);
-
-            for(int i = 0;i < 4; i++){
-                System.out.println(Arrays.toString(network.calculate(set.getInput(i))));
-            }*/
-
-
     }
 
     public void saveNetwork(String fileName) throws Exception {

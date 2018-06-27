@@ -1,5 +1,6 @@
 package com.epsi.nn.gui;
 
+import com.epsi.nn.Network;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -16,11 +17,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.epsi.nn.mnist.Mnist.createTrainSet;
+import static com.epsi.nn.mnist.Mnist.testTrainSet;
 
 
 public class Test {
@@ -29,7 +37,11 @@ public class Test {
     private final  Button cancel;
     private final int CANVAS_WIDTH = 300;
     private final int CANVAS_HEIGHT = 300;
+    private Button filechoose;
+
     private Label lblResult;
+    private Button bPredic;
+    private Network network;
 
 
 
@@ -38,15 +50,21 @@ public class Test {
         ImageView imgView = new ImageView();
         GraphicsContext ctx = canvas.getGraphicsContext2D();
 
+        FileChooser fileToLoad = new FileChooser();
+        File trainingDirectory = new File("../neural-network2/res");
+        fileToLoad.setInitialDirectory(trainingDirectory);
+
         imgView.setFitHeight(100);
         imgView.setFitWidth(100);
         ctx.setLineWidth(10);
         ctx.setLineCap(StrokeLineCap.SQUARE);
         lblResult = new Label();
         cancel = new Button("Annuler");
+        bPredic = new Button("Predict");
+        filechoose  = new Button("Ouvrir...");
 
 
-        HBox hbBottom = new HBox(10, imgView, lblResult,cancel);
+        HBox hbBottom = new HBox(10, filechoose,imgView,cancel,bPredic, lblResult);
         root = new VBox(5, canvas, hbBottom);
         hbBottom.setAlignment(Pos.CENTER);
         root.setAlignment(Pos.CENTER);
@@ -78,15 +96,24 @@ public class Test {
                 clear(ctx);
             }
         });
-        canvas.setOnKeyReleased(e -> {
-            if(e.getCode() == KeyCode.ENTER) {
-                BufferedImage scaledImg = getScaledImage(canvas);
-                imgView.setImage(SwingFXUtils.toFXImage(scaledImg, null));
-                predictImage(scaledImg);
-            }
+        bPredic.setOnAction(e -> {
+            BufferedImage scaledImg = getScaledImage(canvas);
+            //imgView.setImage(SwingFXUtils.toFXImage(scaledImg, null));
+            predictImage(scaledImg);
         });
         clear(ctx);
         canvas.requestFocus();
+
+        filechoose.setOnAction(e->{
+            File file = fileToLoad.showOpenDialog(stage);
+
+            //Testing
+            try {
+                network = Network.loadNetwork(file.getAbsolutePath());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private BufferedImage getScaledImage(Canvas canvas) {
@@ -111,9 +138,7 @@ public class Test {
     }
 
     private void predictImage(BufferedImage img ) {
-
         lblResult.setText("Prediction: " );
-        System.out.println("lol" + img.toString());
     }
 
 

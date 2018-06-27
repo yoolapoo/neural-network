@@ -14,22 +14,6 @@ import java.io.File;
  */
 public class Mnist {
 
-    public static void main(String[] args) {
-        //Training
-        /*Network network = new Network(784, 50, 10);
-        TrainSet set = createTrainSet(0,100);
-        trainData(network, set, 1000, 100, 100, "res/mnist1.txt");*/
-
-        //Testing
-/*        try {
-            Network network = Network.loadNetwork("res/mnist1.txt");
-            testTrainSet(network,createTrainSet(1000,2000),10);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-    }
-
     public static TrainSet createTrainSet(int start, int end) {
 
         TrainSet set = new TrainSet(28 * 28, 10);
