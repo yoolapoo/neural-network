@@ -77,4 +77,3 @@ public class Frame extends javax.swing.JFrame {
     private DrawPanel drawPanel1;
     // End of variables declaration
 }
-
