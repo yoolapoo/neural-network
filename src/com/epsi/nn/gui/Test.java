@@ -1,6 +1,10 @@
 package com.epsi.nn.gui;
 
 import com.epsi.nn.Network;
+import com.epsi.nn.NetworkTools;
+import com.epsi.nn.mnist.MnistImageFile;
+import com.epsi.nn.mnist.MnistLabelFile;
+import com.epsi.nn.trainSet.TrainSet;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -19,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -81,13 +87,13 @@ public class Test {
 
 
         canvas.setOnMousePressed(e -> {
-            ctx.setStroke(Color.WHITE);
+            ctx.setStroke(javafx.scene.paint.Color.WHITE);
             ctx.beginPath();
             ctx.moveTo(e.getX(), e.getY());
             ctx.stroke();
         });
         canvas.setOnMouseDragged(e -> {
-            ctx.setStroke(Color.WHITE);
+            ctx.setStroke(javafx.scene.paint.Color.WHITE);
             ctx.lineTo(e.getX(), e.getY());
             ctx.stroke();
         });
@@ -99,7 +105,7 @@ public class Test {
         bPredic.setOnAction(e -> {
             BufferedImage scaledImg = getScaledImage(canvas);
             //imgView.setImage(SwingFXUtils.toFXImage(scaledImg, null));
-            predictImage(scaledImg);
+            predictImage(network,scaledImg);
         });
         clear(ctx);
         canvas.requestFocus();
@@ -129,7 +135,7 @@ public class Test {
     }
 
     private void clear(GraphicsContext ctx) {
-        ctx.setFill(Color.BLACK);
+        ctx.setFill(javafx.scene.paint.Color.BLACK);
         ctx.fillRect(0, 0, 300, 300);
     }
 
@@ -137,9 +143,25 @@ public class Test {
         return root ;
     }
 
-    private void predictImage(BufferedImage img ) {
-        lblResult.setText("Prediction: " );
+    private void predictImage(Network net, BufferedImage img) {
+
+        double[] input = new double[784];
+        for (int i = 0; i < 28; i++) {
+            for (int n = 0; n < 28; n++) {
+                input[n * 28 + i] = (float)(new java.awt.Color(img.getRGB(i, n)).getRed()) / 256f;
+            }
+        }
+
+        System.out.print("output neuron values: ");
+        double[] output = net.calculate(input);
+        for (double neuronValue: output) {
+            System.out.printf("%02.3f  ", neuronValue);
+        }
+        System.out.println();
+        System.out.print("corresponding number:     0      1      2      3      4      5      6      7      8      9");
+        System.out.println();
+
+        System.out.println("I think, that the handwritten number is: " + NetworkTools.indexOfHighestValue(output) + "!");
+        lblResult.setText("Prediction: " + NetworkTools.indexOfHighestValue(output));
     }
-
-
 }

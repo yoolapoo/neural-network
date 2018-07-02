@@ -16,14 +16,17 @@ public class Mnist {
 
     public static TrainSet createTrainSet(int start, int end) {
 
-        TrainSet set = new TrainSet(28 * 28, 10);
+        TrainSet set = new TrainSet(28 * 28, 62);
 
         try {
 
             String path = new File("").getAbsolutePath();
 
-            MnistImageFile m = new MnistImageFile(path + "/train/train-images.idx3-ubyte", "rw");
-            MnistLabelFile l = new MnistLabelFile(path + "/train/train-labels.idx1-ubyte", "rw");
+            //MnistImageFile m = new MnistImageFile(path + "/train/train-images.idx3-ubyte", "rw");
+            //MnistLabelFile l = new MnistLabelFile(path + "/train/train-labels.idx1-ubyte", "rw");
+
+            MnistImageFile m = new MnistImageFile(path + "/train/emnist-balanced-train-images-idx3-ubyte", "rw");
+            MnistLabelFile l = new MnistLabelFile(path + "/train/emnist-balanced-train-labels-idx1-ubyte", "rw");
 
             for(int i = start; i <= end; i++) {
                 if(i % 100 ==  0){
@@ -31,7 +34,7 @@ public class Mnist {
                 }
 
                 double[] input = new double[28 * 28];
-                double[] output = new double[10];
+                double[] output = new double[62];
 
                 output[l.readLabel()] = 1d;
                 for(int j = 0; j < 28*28; j++){
