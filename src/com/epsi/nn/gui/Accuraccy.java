@@ -33,7 +33,7 @@ public class Accuraccy {
         Button filechoose = new Button("Ouvrir...");
 
         FileChooser fileToLoad = new FileChooser();
-        File trainingDirectory = new File("../neural-network2/res");
+        File trainingDirectory = new File("../digit-character-recognition-nn/res");
         fileToLoad.setInitialDirectory(trainingDirectory);
 
         Label labelResult = new Label("Exactitude: ");

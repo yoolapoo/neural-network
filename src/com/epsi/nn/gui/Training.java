@@ -46,9 +46,9 @@ public class Training {
         TextField txtIn = new TextField("784");
         TextField txtHidden1 = new TextField("70");
         TextField txtHidden2 = new TextField("35");
-        TextField txtOut = new TextField("10");
+        TextField txtOut = new TextField("62");
         TextField txtDataSetSize = new TextField("4999");
-        TextField txtEpochs = new TextField("100");
+        TextField txtEpochs = new TextField("10000");
         TextField txtFileName = new TextField();
 
         Button cancel = new Button("Annuler");
@@ -103,7 +103,7 @@ public class Training {
             scrollPane.setVisible(true);
             FileChooser fileChooser = new FileChooser();
 
-            File defaultDirectory = new File("../neural-network2/res");
+            File defaultDirectory = new File("../digit-character-recognition-nn/res");
             fileChooser.setInitialDirectory(defaultDirectory);
 
             //Set extension filter

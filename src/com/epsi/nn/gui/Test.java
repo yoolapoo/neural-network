@@ -2,9 +2,6 @@ package com.epsi.nn.gui;
 
 import com.epsi.nn.Network;
 import com.epsi.nn.NetworkTools;
-import com.epsi.nn.mnist.MnistImageFile;
-import com.epsi.nn.mnist.MnistLabelFile;
-import com.epsi.nn.trainSet.TrainSet;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -13,28 +10,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.epsi.nn.mnist.Mnist.createTrainSet;
-import static com.epsi.nn.mnist.Mnist.testTrainSet;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class Test {
@@ -44,6 +33,8 @@ public class Test {
     private final int CANVAS_WIDTH = 300;
     private final int CANVAS_HEIGHT = 300;
     private Button filechoose;
+
+
 
     private Label lblResult;
     private Button bPredic;
@@ -57,7 +48,7 @@ public class Test {
         GraphicsContext ctx = canvas.getGraphicsContext2D();
 
         FileChooser fileToLoad = new FileChooser();
-        File trainingDirectory = new File("../neural-network2/res");
+        File trainingDirectory = new File("../digit-character-recognition-nn/res");
         fileToLoad.setInitialDirectory(trainingDirectory);
 
         imgView.setFitHeight(100);
@@ -157,11 +148,12 @@ public class Test {
         for (double neuronValue: output) {
             System.out.printf("%02.3f  ", neuronValue);
         }
-        System.out.println();
-        System.out.print("corresponding number:     0      1      2      3      4      5      6      7      8      9");
-        System.out.println();
 
-        System.out.println("I think, that the handwritten number is: " + NetworkTools.indexOfHighestValue(output) + "!");
-        lblResult.setText("Prediction: " + NetworkTools.indexOfHighestValue(output));
+        int valuePredicted = NetworkTools.indexOfHighestValue(output);
+
+        String res = NetworkTools.inTheList(valuePredicted);
+
+        System.out.println("I think, that the handwritten number is: " + res + "!");
+        lblResult.setText("Prediction: " + res);
     }
 }
