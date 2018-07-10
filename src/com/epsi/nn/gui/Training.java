@@ -48,7 +48,7 @@ public class Training {
         TextField txtHidden2 = new TextField("35");
         TextField txtOut = new TextField("62");
         TextField txtDataSetSize = new TextField("4999");
-        TextField txtEpochs = new TextField("10000");
+        TextField txtEpochs = new TextField("5000");
         TextField txtFileName = new TextField();
 
         Button cancel = new Button("Annuler");
