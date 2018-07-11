@@ -21,13 +21,13 @@ import javafx.stage.Stage;
 import static com.epsi.nn.mnist.Mnist.createTrainSet;
 import static com.epsi.nn.mnist.Mnist.testTrainSet;
 
-public class Accuraccy {
+public class Accuracy {
 
     private final GridPane rootPane ;
 
     private Desktop desktop = Desktop.getDesktop();
 
-    public Accuraccy(Stage stage) {
+    public Accuracy(Stage stage) {
 
         Label labelFileChoose = new Label("Fichier à charger: ");
         Button filechoose = new Button("Ouvrir...");
@@ -91,7 +91,7 @@ public class Accuraccy {
             desktop.open(file);
         } catch (IOException ex) {
             Logger.getLogger(
-                    Accuraccy.class.getName()).log(
+                    Accuracy.class.getName()).log(
                     Level.SEVERE, null, ex
             );
         }

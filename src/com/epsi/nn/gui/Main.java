@@ -7,14 +7,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     Button training;
-    Button accuraccy;
+    Button accuracy;
     Button test;
 
     public static void main(String[] args) {
@@ -27,21 +26,21 @@ public class Main extends Application {
 
 
         VBox buttonPanel = new VBox(10);
-        training = new Button("Training");
-        accuraccy = new Button("Accuraccy");
-        test = new Button("Test");
+        training = new Button("Entrainement");
+        accuracy = new Button("Exactitude de l'algorithme");
+        test = new Button("Reconnaissance");
         training.setPrefSize(200,100);
-        accuraccy.setPrefSize(200,100);
+        accuracy.setPrefSize(200,100);
         test.setPrefSize(200,100);
 
         buttonPanel.setMargin(training,new Insets(60,20,20,300));
-        buttonPanel.setMargin(accuraccy,new Insets(60,20,20,300));
+        buttonPanel.setMargin(accuracy,new Insets(60,20,20,300));
         buttonPanel.setMargin(test,new Insets(60,20,20,300));
 
 
         ObservableList list = buttonPanel.getChildren();
 
-        list.addAll(training,accuraccy,test);
+        list.addAll(training,accuracy,test);
 
 
         training.setOnAction(e ->{
@@ -49,8 +48,8 @@ public class Main extends Application {
             primaryStage.getScene().setRoot(training.getRootPane());
         });
 
-        accuraccy.setOnAction(e ->{
-            Accuraccy accuraccy = new Accuraccy(primaryStage);
+        accuracy.setOnAction(e ->{
+            Accuracy accuraccy = new Accuracy(primaryStage);
             primaryStage.getScene().setRoot(accuraccy.getRootPane());
         });
 

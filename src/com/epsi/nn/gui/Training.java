@@ -36,8 +36,8 @@ public class Training {
 
         Label network = new Label("DONNES DU TRAINING: ");
         Label labelIn = new Label("Entrées: ");
-        Label labelHidden1 = new Label("Hidden1: ");
-        Label labelHidden2 = new Label("Hidden2: ");
+        Label labelHidden1 = new Label("Couche cachée 1: ");
+        Label labelHidden2 = new Label("Couche cachée 2: ");
         Label labelOut = new Label("Sorties: ");
         Label labelDataSetSize = new Label("Taille du Set: ");
         Label labelEpochs = new Label("Nombre d'epochs: ");
@@ -47,8 +47,8 @@ public class Training {
         TextField txtHidden1 = new TextField("70");
         TextField txtHidden2 = new TextField("35");
         TextField txtOut = new TextField("62");
-        TextField txtDataSetSize = new TextField("4999");
-        TextField txtEpochs = new TextField("5000");
+        TextField txtDataSetSize = new TextField("49999");
+        TextField txtEpochs = new TextField("2000");
         TextField txtFileName = new TextField();
 
         Button cancel = new Button("Annuler");

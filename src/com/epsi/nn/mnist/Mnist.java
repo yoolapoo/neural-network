@@ -71,7 +71,6 @@ public class Mnist {
             double highest = NetworkTools.indexOfHighestValue(net.calculate(set.getInput(i)));
             double actualHighest = NetworkTools.indexOfHighestValue(set.getOutput(i));
             if(highest == actualHighest) {
-
                 correct ++ ;
             }
             if(i % printSteps == 0) {
