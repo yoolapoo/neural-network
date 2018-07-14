@@ -138,18 +138,6 @@ public class Network {
         return 1d/ (1+Math.exp(-x));
     }
 
-
-    public static void main(String[] args) {
-        try {
-            Network network = new Network(4,3,2);
-            network.saveNetwork("res/test2.txt");
-            System.out.println(Arrays.toString(network.NETWORK_LAYER_SIZES));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void saveNetwork(String fileName) throws Exception {
         Parser p = new Parser();
         p.create(fileName);

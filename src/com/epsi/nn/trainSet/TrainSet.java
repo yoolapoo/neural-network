@@ -12,7 +12,6 @@ public class TrainSet {
     public final int INPUT_SIZE;
     public final int OUTPUT_SIZE;
 
-    //double[][] <- index1: 0 = input, 1 = output || index2: index of element
     private List<double[][]> data = new ArrayList<>();
 
     public TrainSet(int INPUT_SIZE, int OUTPUT_SIZE) {
@@ -34,25 +33,6 @@ public class TrainSet {
             }
             return set;
         } else return this;
-    }
-
-    public static void main(String[] args) {
-        TrainSet set = new TrainSet(3, 2);
-
-        for (int i = 0; i < 8; i++) {
-            double[] a = new double[3];
-            double[] b = new double[2];
-            for (int k = 0; k < 3; k++) {
-                a[k] = (double) ((int) (Math.random() * 10)) / (double) 10;
-                if (k < 2) {
-                    b[k] = (double) ((int) (Math.random() * 10)) / (double) 10;
-                }
-            }
-            set.addData(a, b);
-        }
-
-        System.out.println(set);
-        System.out.println(set.extractBatch(3));
     }
 
     public String toString() {

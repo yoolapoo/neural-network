@@ -9,24 +9,14 @@ import com.epsi.nn.trainSet.TrainSet;
 import java.io.File;
 
 
-/**
- * Created by Luecx on 10.08.2017.
- */
+
 public class Mnist {
 
-    public static TrainSet createTrainSet(int start, int end) {
+    public static TrainSet createTrainSet(int start, int end, MnistImageFile m, MnistLabelFile l) {
 
         TrainSet set = new TrainSet(28 * 28, 62);
 
         try {
-
-            String path = new File("").getAbsolutePath();
-
-            //MnistImageFile m = new MnistImageFile(path + "/train/train-images.idx3-ubyte", "rw");
-            //MnistLabelFile l = new MnistLabelFile(path + "/train/train-labels.idx1-ubyte", "rw");
-
-            MnistImageFile m = new MnistImageFile(path + "/train/emnist-balanced-train-images-idx3-ubyte", "rw");
-            MnistLabelFile l = new MnistLabelFile(path + "/train/emnist-balanced-train-labels-idx1-ubyte", "rw");
 
             for(int i = start; i <= end; i++) {
                 if(i % 100 ==  0){

@@ -60,7 +60,6 @@ public class MnistPanel extends JPanel {
 	}
 	
 	public void paintComponent(Graphics g){
-		System.out.println("ldkawlkdaw");
 		Graphics2D g2d = (Graphics2D) g;
 		
 		int w = this.getWidth();
