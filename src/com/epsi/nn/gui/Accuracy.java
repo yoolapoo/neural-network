@@ -3,13 +3,16 @@ package com.epsi.nn.gui;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.epsi.nn.Network;
-import com.epsi.nn.mnist.MnistImageFile;
-import com.epsi.nn.mnist.MnistLabelFile;
+import com.epsi.nn.NetworkTools;
+import com.epsi.nn.model.MnistModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -50,10 +53,14 @@ public class Accuracy {
 
         Button cancel = new Button("Annuler");
 
-        RadioButton digits = new RadioButton("Chiffres");
+        RadioButton mnistDigits = new RadioButton("Mnist-Digits");
+        RadioButton emnistDigits = new RadioButton("Emnist-Digits");
         RadioButton letters = new RadioButton("Lettres");
+        RadioButton balanced = new RadioButton("Balanced");
+        RadioButton byMerge = new RadioButton("ByMerge");
+        RadioButton byClass = new RadioButton("ByClass");
         VBox radioButtons = new VBox(2);
-        radioButtons.getChildren().addAll(digits,letters);
+        radioButtons.getChildren().addAll(mnistDigits,emnistDigits,letters,balanced,byClass,byMerge);
         Label labelType = new Label("Type de réseau: ");
 
 
@@ -68,17 +75,95 @@ public class Accuracy {
         });
 
         AtomicReference<String> type = new AtomicReference<>("");
-        digits.setOnAction(e->{
-            digits.setSelected(true);
-            letters.setSelected(false);
-            digits.requestFocus();
-            type.set(digits.getText());
+        List<RadioButton> radioButtonList = new ArrayList<>();
+        radioButtonList.add(mnistDigits);
+        radioButtonList.add(emnistDigits);
+        radioButtonList.add(balanced);
+        radioButtonList.add(byClass);
+        radioButtonList.add(byMerge);
+        radioButtonList.add(letters);
+
+        AtomicInteger start = new AtomicInteger(0);
+        AtomicInteger end = new AtomicInteger(0);
+        AtomicInteger classes = new AtomicInteger(0);
+
+        mnistDigits.setOnAction(e->{
+            start.set(1000);
+            end.set(2000);
+            classes.set(10);
+            mnistDigits.setSelected(true);
+            mnistDigits.requestFocus();
+            type.set(mnistDigits.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(mnistDigits.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
+        });
+        emnistDigits.setOnAction(e->{
+            start.set(4000);
+            end.set(8000);
+            classes.set(10);
+            emnistDigits.setSelected(true);
+            emnistDigits.requestFocus();
+            type.set(emnistDigits.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(emnistDigits.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
         });
         letters.setOnAction(e->{
+            start.set(2000);
+            end.set(4000);
+            classes.set(26);
             letters.setSelected(true);
-            digits.setSelected(false);
             letters.requestFocus();
             type.set(letters.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(letters.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
+        });
+        balanced.setOnAction(e->{
+            start.set(2000);
+            end.set(4000);
+            classes.set(47);
+            balanced.setSelected(true);
+            balanced.requestFocus();
+            type.set(balanced.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(balanced.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
+        });
+        byClass.setOnAction(e->{
+            start.set(12000);
+            end.set(24000);
+            classes.set(62);
+            byClass.setSelected(true);
+            byClass.requestFocus();
+            type.set(byClass.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(byClass.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
+        });
+        byMerge.setOnAction(e->{
+            start.set(12000);
+            end.set(24000);
+            classes.set(47);
+            byMerge.setSelected(true);
+            byMerge.requestFocus();
+            type.set(byMerge.getText());
+            radioButtonList.forEach(radioButton -> {
+                if(!radioButton.getText().equals(byMerge.getText())){
+                    radioButton.setSelected(false);
+                }
+            });
         });
 
         AtomicReference<String> accuraccy = new AtomicReference<>("");
@@ -88,26 +173,12 @@ public class Accuracy {
                 openFile(file);
             }
 
-            MnistImageFile images = null;
-            MnistLabelFile labels = null;
             //Testing
             try {
                 Network network = Network.loadNetwork(file.getAbsolutePath());
-                if(type.get().equals("Chiffres")){
-                    try {
-                        images = new MnistImageFile(path + "/train/train-images-idx3-ubyte", "rw");
-                        labels = new MnistLabelFile(path + "/train/train-labels-idx1-ubyte", "rw");
-                    }catch (Exception e1) {
-                        e1.printStackTrace();}
-                } else if (type.get().equals("Lettres")) {
-                    try {
-                        images = new MnistImageFile(path + "/train/emnist-letters-test-images-idx3-ubyte", "rw");
-                        labels = new MnistLabelFile(path + "/train/emnist-letters-test-labels-idx1-ubyte","rw");
-                    }catch (Exception e1) {
-                        e1.printStackTrace();}
-                }
+                MnistModel model = NetworkTools.loadDataSet(type);
 
-                accuraccy.set(testTrainSet(network, createTrainSet(1000, 2000,images,labels), 10));
+                accuraccy.set(testTrainSet(network, createTrainSet(start.get(), end.get(),model.getImageFile(),model.getLabelFile(),classes.get()), 10));
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -119,10 +190,11 @@ public class Accuracy {
         rootPane.setAlignment(Pos.CENTER);
         rootPane.setVgap(20);
 
-        rootPane.add(labelFileChoose,0,0);
-        rootPane.add(filechoose,1,0);
-        rootPane.add(labelType,0,1);
-        rootPane.add(radioButtons,1,1);
+
+        rootPane.add(labelType,0,0);
+        rootPane.add(radioButtons,1,0);
+        rootPane.add(labelFileChoose,0,1);
+        rootPane.add(filechoose,1,1);
         rootPane.add(labelResult,0,2);
         rootPane.add(txtResult,1,2);
         rootPane.add(cancel,0,3);

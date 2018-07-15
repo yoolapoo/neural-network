@@ -66,6 +66,19 @@ public class Test {
         hbBottom.setAlignment(Pos.CENTER);
         root.setAlignment(Pos.CENTER);
 
+        AtomicReference<String> typeReseau = new AtomicReference<>("");
+        filechoose.setOnAction(e->{
+            File file = fileToLoad.showOpenDialog(stage);
+            typeReseau.set(file.getName());
+
+            //Testing
+            try {
+                network = Network.loadNetwork(file.getAbsolutePath());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
+
         //Retour ecran d'accueil
         cancel.setOnAction(e->{
             Main main = new Main();
@@ -95,22 +108,13 @@ public class Test {
         });
         bPredic.setOnAction(e -> {
             BufferedImage scaledImg = getScaledImage(canvas);
-            //imgView.setImage(SwingFXUtils.toFXImage(scaledImg, null));
-            predictImage(network,scaledImg);
+            predictImage(network,scaledImg, typeReseau.get());
         });
         clear(ctx);
         canvas.requestFocus();
 
-        filechoose.setOnAction(e->{
-            File file = fileToLoad.showOpenDialog(stage);
 
-            //Testing
-            try {
-                network = Network.loadNetwork(file.getAbsolutePath());
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        });
+
     }
 
     private BufferedImage getScaledImage(Canvas canvas) {
@@ -134,7 +138,7 @@ public class Test {
         return root ;
     }
 
-    private void predictImage(Network net, BufferedImage img) {
+    private void predictImage(Network net, BufferedImage img, String type) {
 
         double[] input = new double[784];
         for (int i = 0; i < 28; i++) {
@@ -143,17 +147,25 @@ public class Test {
             }
         }
 
-        System.out.print("output neuron values: ");
+        System.out.print("valeurs du neurone output: ");
         double[] output = net.calculate(input);
         for (double neuronValue: output) {
             System.out.printf("%02.3f  ", neuronValue);
         }
 
         int valuePredicted = NetworkTools.indexOfHighestValue(output);
+        String res = "";
+        if(type.contains("Mnist-Digits") || type.contains("Emnist-Digits") || type.contains("ByClass")){
+           res = NetworkTools.inTheList(valuePredicted);
+        } else if(type.contains("Lettres")){
+            res = NetworkTools.inTheListLetters(valuePredicted);
+        } else if(type.contains("Balanced")){
+            res = NetworkTools.inTheListBalanced(valuePredicted);
+        } else if(type.contains("ByMerge")){
+            res = NetworkTools.inTheListByMerge(valuePredicted);
+        }
 
-        String res = NetworkTools.inTheList(valuePredicted);
-
-        System.out.println("I think, that the handwritten number is: " + res + "!");
+        System.out.println("Prédiction : le caractère écrit est le : " + res + "!");
         lblResult.setText("Prediction: " + res);
     }
 }

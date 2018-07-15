@@ -12,9 +12,9 @@ import java.io.File;
 
 public class Mnist {
 
-    public static TrainSet createTrainSet(int start, int end, MnistImageFile m, MnistLabelFile l) {
+    public static TrainSet createTrainSet(int start, int end, MnistImageFile m, MnistLabelFile l,int classes) {
 
-        TrainSet set = new TrainSet(28 * 28, 62);
+        TrainSet set = new TrainSet(28 * 28, classes);
 
         try {
 
@@ -24,7 +24,7 @@ public class Mnist {
                 }
 
                 double[] input = new double[28 * 28];
-                double[] output = new double[62];
+                double[] output = new double[classes];
 
                 output[l.readLabel()] = 1d;
                 for(int j = 0; j < 28*28; j++){

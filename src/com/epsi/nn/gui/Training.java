@@ -1,13 +1,16 @@
 package com.epsi.nn.gui;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.epsi.nn.Network;
-import com.epsi.nn.mnist.MnistImageFile;
-import com.epsi.nn.mnist.MnistLabelFile;
+import com.epsi.nn.NetworkTools;
+import com.epsi.nn.model.MnistModel;
 import com.epsi.nn.trainSet.TrainSet;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,7 +23,6 @@ import javafx.stage.Stage;
 
 import static com.epsi.nn.mnist.Mnist.createTrainSet;
 import static com.epsi.nn.mnist.Mnist.trainData;
-import static javafx.scene.input.KeyCode.M;
 
 public class Training {
 
@@ -29,9 +31,6 @@ public class Training {
     private final TextArea textArea;
 
     public Training(Stage stage) {
-
-        String path = new File("").getAbsolutePath();
-
 
         Label network = new Label("DONNES DU TRAINING: ");
         Label labelIn = new Label("Entrées: ");
@@ -48,12 +47,18 @@ public class Training {
         TextField txtHidden2 = new TextField("35");
         TextField txtOut = new TextField();
         TextField txtDataSetSize = new TextField();
-        TextField txtEpochs = new TextField("2000");
+        TextField txtEpochs = new TextField("100");
         TextField txtFileName = new TextField();
-        RadioButton digits = new RadioButton("Chiffres");
+
+        RadioButton mnistDigits = new RadioButton("Mnist-Digits");
+        RadioButton emnistDigits = new RadioButton("Emnist-Digits");
         RadioButton letters = new RadioButton("Lettres");
+        RadioButton balanced = new RadioButton("Balanced");
+        RadioButton byMerge = new RadioButton("ByMerge");
+        RadioButton byClass = new RadioButton("ByClass");
+
         VBox radioButtons = new VBox(2);
-        radioButtons.getChildren().addAll(digits,letters);
+        radioButtons.getChildren().addAll(mnistDigits,emnistDigits,letters,balanced,byClass,byMerge);
 
 
         Button cancel = new Button("Annuler");
@@ -87,30 +92,50 @@ public class Training {
             }
         });
         AtomicReference<String> type = new AtomicReference<>("");
-        digits.setOnAction(e->{
-            digits.setSelected(true);
-            letters.setSelected(false);
-            digits.requestFocus();
-            txtOut.setText("10");
-            txtDataSetSize.setText("4999");
-            txtFileName.setText("digits-");
-            type.set(digits.getText());
+        AtomicInteger classes = new AtomicInteger(0);
+
+        List<RadioButton> radioButtonList = new ArrayList<>();
+        radioButtonList.add(mnistDigits);
+        radioButtonList.add(emnistDigits);
+        radioButtonList.add(balanced);
+        radioButtonList.add(byClass);
+        radioButtonList.add(byMerge);
+        radioButtonList.add(letters);
+
+        mnistDigits.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(10);
         });
-        letters.setOnAction(e->{
-            letters.setSelected(true);
-            digits.setSelected(false);
-            letters.requestFocus();
-            txtOut.setText("52");
-            txtDataSetSize.setText("4999");
-            txtFileName.setText("letters-");
-            type.set(letters.getText());
+        emnistDigits.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(10);
         });
+        letters.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(26);
+        });
+        balanced.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(47);
+        });
+        byClass.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(62);
+        });
+        byMerge.setOnAction(event -> {
+            String typeR = NetworkTools.buttonActions(radioButtonList,txtOut,txtDataSetSize,txtFileName);
+            type.set(typeR);
+            classes.set(47);
+        });
+
 
         //On lance l'entrainement avec les valeurs pré-saisies
         train.setOnAction(e->{
-
-            MnistImageFile images = null;
-            MnistLabelFile labels = null;
 
             //Données saisies dans le formulaire
             int entrees = Integer.parseInt(txtIn.getText());
@@ -120,22 +145,10 @@ public class Training {
             int tailleSet = Integer.parseInt(txtDataSetSize.getText());
             int epochs = Integer.parseInt(txtEpochs.getText());
             String nomFichier = txtFileName.getText();
-            if(type.get().equals("Chiffres")){
-                try {
-                    images = new MnistImageFile(path + "/train/train-images-idx3-ubyte", "rw");
-                    labels = new MnistLabelFile(path + "/train/train-labels-idx1-ubyte", "rw");
-                }catch (Exception e1) {
-                    e1.printStackTrace();}
-            } else if (type.get().equals("Lettres")) {
-                try {
-                    images = new MnistImageFile(path + "/train/emnist-letters-train-images-idx3-ubyte", "rw");
-                    labels = new MnistLabelFile(path + "/train/emnist-letters-train-labels-idx1-ubyte","rw");
-                }catch (Exception e1) {
-                    e1.printStackTrace();}
-            }
 
+            MnistModel model = NetworkTools.loadDataSet(type);
             Network net = new Network(entrees, hidden1, hidden2, sorties);
-            TrainSet set = createTrainSet(0,tailleSet,images,labels);
+            TrainSet set = createTrainSet(0,tailleSet,model.getImageFile(),model.getLabelFile(),classes.get());
             trainData(net, set, epochs, 100, 100, "res/"+ nomFichier + ".txt");
         });
 
